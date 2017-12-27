@@ -182,7 +182,7 @@ public class App {
     public static void main(String[] args) {
 
         CountDownLatch latch = new CountDownLatch(0);
-        CountTask task = new CountTask(1, 100, latch);
+        CountTask task = new CountTask(1, 60, latch);
 
         ForkJoinPool pool = new ForkJoinPool(3);
         Future<Integer> result = pool.submit(task);
@@ -209,7 +209,7 @@ public class App {
 
         newQueue.sort((o1, o2) -> (int) (o1.time - o2.time));
 
-        final int imageHeight = 2000;
+        final int imageHeight = 800;
 
         BufferedImage image = new BufferedImage(240 * threadIDs.length, imageHeight, TYPE_INT_RGB);
         Graphics2D graphics = (Graphics2D) image.getGraphics();
@@ -217,15 +217,17 @@ public class App {
         graphics.setColor(Color.white);
         graphics.fillRect(0, 0, image.getWidth(), imageHeight);
 
+        graphics.setColor(Color.black);
+        graphics.setStroke(new BasicStroke());
+
         for (int i = 0; i < threadIDs.length; i++) {
-
-            graphics.setColor(Color.black);
-            graphics.setStroke(new BasicStroke());
-
             int linePos = image.getWidth() / threadIDs.length * i;
-            graphics.drawLine(linePos, 0, linePos, imageHeight);
 
-            graphics.drawString("" + threadIDs[i], linePos + 105, 20);
+            if (i > 0) {
+                graphics.drawLine(linePos, 0, linePos, imageHeight);
+            }
+
+            graphics.drawString("线程 " + threadIDs[i], linePos + 90, 20);
         }
 
         Record[] records = newQueue.toArray(new Record[0]);
